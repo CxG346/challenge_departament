@@ -1,0 +1,43 @@
+@header-color: #FFFF;
+@main-color: #1890FF;
+
+.mainHeader{
+    background-color: @header-color;
+    
+    h3 {
+        font-size: 1.3rem;
+        padding: .5rem 1rem;
+        margin: 1rem 0 0 0;
+        font-weight: 500;
+    }
+
+    ul{
+        background-color: @header-color;
+        width: 100%;
+    }
+}
+
+.actions {
+    display: flex;
+    align-items: end;
+    margin-bottom: 1rem;
+}
+
+
+.tableActions{
+    padding: 1rem 2rem;
+
+    .filterTable{
+        display: flex;
+        justify-content: space-between;
+    }
+ }
+  
+.tableData{
+    display: flex;
+    justify-content: center;
+
+    .ant-table-wrapper {
+        width: 100%;
+    }
+}

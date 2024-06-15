@@ -1,0 +1,36 @@
+@main-color: #1890FF;
+@hover-color: #40a9ff;
+
+.header {
+  padding: 0;
+  background-color: @main-color;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 60% 30%;
+  align-items: center;
+
+  .ant-menu-item-selected{
+    background-color: @hover-color;
+    color: white;
+  }
+
+  ul{
+    background-color: @main-color;
+  }
+
+  img{
+      margin: 0 2rem 0 1rem;
+  }
+
+  .rightMenu{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+  }
+
+}
+
+
+.defaultIcon {
+  color: @main-color;
+}
