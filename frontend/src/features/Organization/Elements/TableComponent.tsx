@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import type { TableProps } from "antd";
 import { Row, Table, Col, Pagination } from "antd";
@@ -15,7 +16,10 @@ const TableComponent: React.FC = () => {
     rowSelection: {},
     pagination: false,
   };
-  const [filterOptions, setFilterOptions] = useState<{text: string; value: number}[]>([]);
+  const [filterOptions, setFilterOptions] = useState<
+    { text: string; value: number }[]
+  >([]);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const dispatch = useDispatch();
 
@@ -23,7 +27,12 @@ const TableComponent: React.FC = () => {
     const fetchDepartamentNames = async () => {
       try {
         const response = await DepartamentService.getDepartamentNames();
-        setFilterOptions(response.data.map(data => ({ text: data.name, value: data.name })));
+        setFilterOptions(
+          response.data.map((data: { name: any }) => ({
+            text: data.name,
+            value: data.name,
+          }))
+        );
       } catch (error) {
         console.error("Error fetching departament names:", error);
       }
@@ -53,23 +62,34 @@ const TableComponent: React.FC = () => {
     }
   };
 
-  const handleTableAction = (pagination, filters, sorter) => {
-    console.log("pagination", pagination);
-    console.log("filters", filters);
-    console.log("sorter", sorter);
-    console.log('sorter.order', sorter.order)
-    console.log('filters.name', filters.name)
-
-    if(sorter.order){
-      const params = {sortField: sorter.field, sortOrder: sorter.order.substring(0, 3) == 'asc' ? 'asc' : 'desc'};
+  const handleTableAction = (
+    filters: any,
+    sorter: any
+  ) => {
+    if (sorter.order) {
+      const params = {
+        sortField: sorter.field,
+        sortOrder: sorter.order.substring(0, 3) == "asc" ? "asc" : "desc",
+      };
       fetchData(params);
-    }else if(filters.name != null){
-      const params = {filter: 'name', search: filters.name.map(data => `${data}`).join(",")};
+    } else if (filters.name != null) {
+      const params = {
+        filter: "name",
+        search: filters.name.map((data: any) => `${data}`).join(","),
+      };
       fetchData(params);
-    }else{
-      console.log('Entro')
+    } else {
+      console.log("Entro");
       fetchData({});
     }
+  };
+
+  const handlePagination = (
+    page: number,
+    pageSize: React.SetStateAction<number>
+  ) => {
+    setPageSize(pageSize);
+    fetchData({ page, perPage: pageSize });
   };
 
   const data = useSelector((state: any) => state.table.data);
@@ -82,12 +102,18 @@ const TableComponent: React.FC = () => {
           {...tableProps}
           columns={columnsOrganization(filterOptions)}
           dataSource={data}
-          onChange={(pagination, filters, sorter) =>
-            handleTableAction(pagination, filters, sorter)
+          onChange={(_, filters, sorter) =>
+            handleTableAction(filters, sorter)
           }
         />
         <Row justify="end">
-          <Pagination defaultCurrent={1} total={total} />
+          <Pagination
+            defaultCurrent={1}
+            total={total}
+            pageSize={pageSize}
+            showSizeChanger={true}
+            onChange={(page, pageSize) => handlePagination(page, pageSize)}
+          />
         </Row>
       </Col>
     </Row>

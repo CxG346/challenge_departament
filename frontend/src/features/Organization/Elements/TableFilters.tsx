@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Row, Col, Radio, RadioChangeEvent, Select, Input } from "antd";
 import React, { useState } from "react";
 import style from "../Organization.module.less";
@@ -57,7 +59,7 @@ const TableFilters: React.FC = () => {
     SetPlacement(e.target.value);
   };
 
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+  const onSearch: SearchProps["onSearch"] = (value, _, __) => {
     fetchData(filterTable, value);
   };
 

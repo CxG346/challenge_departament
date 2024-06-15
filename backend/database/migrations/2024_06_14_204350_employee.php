@@ -17,7 +17,7 @@ class Employee extends Migration
             $table->id();
             $table->unsignedBigInteger('departament_id');
             $table->integer('level');
-            $table->string('name', 45);
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }

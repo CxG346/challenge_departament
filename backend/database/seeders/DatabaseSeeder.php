@@ -13,8 +13,25 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
+
+
+
+
     public function run()
     {
+
+        function getRandomName()
+        {
+            $firstNames = ["Carlos", "Luis", "Ana", "María", "Jose", "Lucía", "Juan", "Marta", "Pedro", "Laura"];
+            $lastNames = ["García", "Rodríguez", "Martínez", "Hernández", "López", "González", "Pérez", "Sánchez", "Ramírez", "Torres"];
+
+            $firstName = $firstNames[array_rand($firstNames)];
+            $lastName1 = $lastNames[array_rand($lastNames)];
+            $lastName2 = $lastNames[array_rand($lastNames)];
+
+            return $firstName . ' ' . $lastName1 . ' ' . $lastName2;
+        }
+
         $dataSeeder = [
             [
                 "departamento" => "Recursos Humanos",
@@ -113,31 +130,51 @@ class DatabaseSeeder extends Seeder
             $rndm1 = rand(3, 12);
 
             for ($i = 0; $i < $rndm1; $i++) {
+                $isSave = rand(0, 3);
+
                 $employee = new Employee();
                 $employee->departament_id = $departament->id;
-                if($i == 0){
-                    $employee->name = "Ambassador " . $departament->name;
-                }
+                $employee->name = $isSave == 1 ? getRandomName() : null;
                 $employee->level = rand(0, 3);
                 $employee->save();
+
+
+                if ($isSave == 1) {
+                    $findDepartament = Departament::find($departament->id);
+                    $findDepartament->ambassador = $employee->id;
+                    $findDepartament->save();
+                }
             }
 
             foreach ($data["subdepartamentos"] as $subdepartamentName) {
-                $subdepartament = new Departament();
-                $subdepartament->name = $subdepartamentName;
-                $subdepartament->departament_dad_id = $departament->id;
-                $subdepartament->save();
+                $existingDepartament = Departament::where('name', $subdepartamentName)->first();
 
-                $rndm1 = rand(3, 12);
+                if (!$existingDepartament) {
+                    $subdepartament = new Departament();
+                    $subdepartament->name = $subdepartamentName;
+                    $subdepartament->departament_dad_id = $departament->id;
+                    $subdepartament->save();
+                } else {
+                    $subdepartament = $existingDepartament;
+                }
 
-                for ($i = 0; $i < $rndm1; $i++) {
-                    $employee = new Employee();
-                    $employee->departament_id = $subdepartament->id;
-                    if($i == 0){
-                        $employee->name = "Ambassador " . $subdepartamentName;
+                $rndm2 = rand(3, 12);
+
+                for ($i = 0; $i < $rndm2; $i++) {
+                    $isSave = rand(0, 8);
+
+                    $employeeSD = new Employee();
+                    $employeeSD->departament_id = $subdepartament->id;
+                    $employeeSD->name = $isSave == 1 ? getRandomName() : null;
+                    $employeeSD->level = rand(0, 3);
+                    $employeeSD->save();
+
+
+                    if ($isSave == 1) {
+                        $findDepartament = Departament::find($subdepartament->id);
+                        $findDepartament->ambassador = $employeeSD->id;
+                        $findDepartament->save();
                     }
-                    $employee->level = rand(0, 3);
-                    $employee->save();
                 }
             }
         }

@@ -220,7 +220,7 @@ class DepartamentController extends Controller
     public function getData(Request $request)
     {
 
-        $perPage = $request->perPage ?? 15;
+        $perPage = $request->perPage ?? 10;
         $sortField = $request->sortField ?? 'id';
         $sortOrder = $request->sortOrder ?? 'asc';
         $filter = $request->filter ?? null;
